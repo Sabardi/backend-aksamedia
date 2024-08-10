@@ -15,13 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'id' => (string) Str::uuid(),
-            'name' => 'admin',
-            'username' => 'admin',
-            'phone' => 87863968484,
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        // User::factory()->create([
+        //     'name' => 'admin',
+        //     'email' => 'test@example.com',
+        //     'password' => bcrypt('password'),
+        // ]);
+        $this->call(UserSeeder::class);
+        $this->call(DivisionSeeder::class);
     }
 }
