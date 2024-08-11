@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DivisionsController;
+use App\Http\Controllers\Api\KaryawanController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,5 +11,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('login', [UserController::class, 'login']);
-Route::resource('/divison', DivisionsController::class,);
-Route::get('search', [DivisionsController::class, 'search']);
+Route::resource('/divisions', DivisionsController::class,);
+Route::resource('/employees', KaryawanController::class,);

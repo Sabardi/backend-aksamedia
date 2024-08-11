@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Divisions extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        "name",
+    ];
+
+    public function karyawan(){
+        return $this->hasOne(Karyawan::class, 'division_id');
+    }
 }

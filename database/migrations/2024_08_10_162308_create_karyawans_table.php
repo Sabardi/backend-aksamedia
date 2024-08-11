@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('division_id')->constrained('divisions');
+            $table->string('name');
+            $table->string('image');
+            $table->bigInteger('phone');
             $table->timestamps();
         });
     }

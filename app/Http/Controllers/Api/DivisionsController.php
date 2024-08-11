@@ -8,18 +8,8 @@ use App\Models\Divisions;
 
 class DivisionsController extends Controller
 {
-    //
-    public function index(){
-        $divisi = Divisions::all();
 
-        return response()->json([
-            "status" => 200,
-            "message" => "sukses di tampilkan",
-            "data" => $divisi
-        ]);
-    }
-
-    public function search(Request $request){
+    public function index(Request $request){
 
         $name = $request->input('name');
 
