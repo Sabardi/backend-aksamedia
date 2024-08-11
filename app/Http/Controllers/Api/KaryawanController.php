@@ -12,7 +12,7 @@ class KaryawanController extends Controller
     public function index()
     {
         $karyawan = Karyawan::with('division')->get();
-        $transformedEmployees = $karyawan->map(function ($employee) {
+        $GabungEmployees = $karyawan->map(function ($employee) {
             return [
                 'id' => $employee->id,
                 'image' => url('images/' . $employee->image),
@@ -30,7 +30,7 @@ class KaryawanController extends Controller
             'status' => 'success',
             'message' => 'Data retrieved successfully',
             'data' => [
-                'employees' => $transformedEmployees
+                'employees' => $GabungEmployees
             ]
         ], 200);
     }
