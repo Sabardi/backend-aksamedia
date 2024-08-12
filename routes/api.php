@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DivisionsController;
 use App\Http\Controllers\Api\KaryawanController;
 use App\Http\Controllers\Api\UserController;
+use Database\Seeders\KaryawanSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,6 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/divisions', DivisionsController::class);
     Route::resource('/employees', KaryawanController::class);
+    Route::get('search', [KaryawanController::class, 'search']);
     Route::post('logout', [AuthController::class, 'logout']);
 });

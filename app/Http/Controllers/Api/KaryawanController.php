@@ -9,55 +9,9 @@ use Illuminate\Http\Request;
 class KaryawanController extends Controller
 {
     //
-    // public function index()
-    // {
-    //     $karyawan = Karyawan::with('division')->get();
-    //     $GabungEmployees = $karyawan->map(function ($employee) {
-    //         return [
-    //             'id' => $employee->id,
-    //             'image' => url('images/' . $employee->image),
-    //             'name' => $employee->name,
-    //             'phone' => $employee->phone,
-    //             'division' => [
-    //                 'id' => $employee->division->id,
-    //                 'name' => $employee->division->name,
-    //             ],
-    //             'position' => $employee->division->name,
-    //         ];
-    //     });
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Data retrieved successfully',
-    //         'data' => [
-    //             'employees' => $GabungEmployees
-    //         ]
-    //     ], 200);
-    // }
-
-    public function index(Request $request)
+    public function index()
     {
-        // Ambil parameter filter dari permintaan
-        $searchName = $request->input('name');
-        $searchDivision = $request->input('devisi');
-
-        // Mulai query dengan relasi 'division'
-        $query = Karyawan::with('division');
-
-        // Terapkan filter berdasarkan nama jika diberikan
-        if ($searchName) {
-            $query->where('name' ,$searchName );
-        }
-
-        // Terapkan filter berdasarkan divisi jika diberikan
-        if ($searchDivision) {
-            $query->where('division_id', $searchDivision);
-        }
-
-        // Ambil data karyawan setelah diterapkan filter
-        $karyawan = $query->get();
-
-        // Transformasi data karyawan
+        $karyawan = Karyawan::with('division')->get();
         $GabungEmployees = $karyawan->map(function ($employee) {
             return [
                 'id' => $employee->id,
@@ -74,14 +28,69 @@ class KaryawanController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'sukses',
+            'message' => 'Data retrieved successfully',
             'data' => [
                 'employees' => $GabungEmployees
             ]
         ], 200);
     }
 
-    public function store(Request $request){
+    public function search(Request $request)
+{
+    $name = $request->input('name');
+
+    if (empty($name)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Keyword pencarian tidak boleh kosong',
+            'data' => [
+                'employees' => []
+            ],
+            'pagination' => []
+        ], 400);
+    }
+
+    // Use pagination
+    $employees = Karyawan::where('name', $name)
+        ->orWhere('name', 'like', "%{$name}%")
+        ->with('division')
+        ->paginate(10);
+
+    // Transform 
+    $transformedEmployees = $employees->map(function ($employee) {
+        return [
+            'id' => $employee->id,
+            'image' => url('images/' . $employee->image),
+            'name' => $employee->name,
+            'phone' => $employee->phone,
+            'division' => [
+                'id' => $employee->division->id,
+                'name' => $employee->division->name,
+            ],
+            'position' => $employee->division->name,
+        ];
+    });
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'sukses',
+        'data' => [
+            'employees' => $transformedEmployees
+        ],
+        'pagination' => [
+            'current_page' => $employees->currentPage(),
+            'last_page' => $employees->lastPage(),
+            'per_page' => $employees->perPage(),
+            'total' => $employees->total(),
+            'from' => $employees->firstItem(),
+            'to' => $employees->lastItem(),
+        ],
+    ], 200);
+}
+
+
+    public function store(Request $request)
+    {
         $request->validate([
             "image" => "required",
             "name" => "required",
@@ -98,7 +107,8 @@ class KaryawanController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $request->validate([
             "image" => "required",
             "name" => "required",
@@ -140,5 +150,4 @@ class KaryawanController extends Controller
             'message' => 'Data berhasil dihapus'
         ], 204);
     }
-
 }
