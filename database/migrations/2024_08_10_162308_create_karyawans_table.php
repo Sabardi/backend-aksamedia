@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('division_id')->constrained('divisions');
             $table->string('name');
             $table->string('image');
+            $table->string('position');
             $table->bigInteger('phone');
             $table->timestamps();
         });
